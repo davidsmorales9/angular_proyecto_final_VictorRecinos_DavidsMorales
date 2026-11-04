@@ -1,0 +1,26 @@
+{
+    "carreras":[
+        "Ingenieria en Sistemas","Ingenieria Industrial","Licenciatura en Administracion de Empresas","Ingenieria en Mecatronica"
+    ],
+    "jornadas":[
+        "Matutina","Vespertina","Nocturna","Fin de Semana"
+    ],
+    "modalidades":[
+        "Presencial","Virtual","Hibrida"
+    ],
+    "periodos":[
+        "2026-1","2026-2"
+    ],
+    "generos":[
+        "MASCULINO","FEMENINO","OTRO"
+    ],
+    "estatusEstudiante":[
+        "ACTIVO","INACTIVO","SUSPENDIDO","EGRESADO","GRADUADO"
+    ],
+    "estatusCurso":[
+        "PLANIFICADO","ABIERTO","EN CURSO","CERRADO","CANCELADO"
+    ],
+    "estatusInscripcion":[
+        "BORRADOR","REGISTRADA","EN REVISION","APROBADA","RECHAZADA","CANCELADA"
+    ]
+}

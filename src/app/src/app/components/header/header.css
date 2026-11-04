@@ -1,0 +1,27 @@
+.navbar-header {
+display: flex;
+align-items: center;
+justify-content: center;
+padding: 16px;
+box-shadow: 0px 2px 4px rgba(43, 43, 43, 0.1);
+background-color: rgb(2, 255, 213);
+}
+
+.brand-title {
+display: flex;
+align-items: center;
+gap: 8px;
+font-size: 1.2rem;
+}
+
+
+
+.nav-links a {
+margin-left: 8px;
+color: #080000;
+}
+
+.active-link {
+background-color: rgba(155, 8, 8, 0.2);
+border-radius: 4px;
+}
