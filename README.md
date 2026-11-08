@@ -1,59 +1,126 @@
-# AngularProyectoFinalVictorRecinosDavidsMorales
+# Sistema de Gestión Académica (Angular + LocalStorage)
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.35.
+Proyecto colaborativo desarrollado con Angular y TypeScript para administrar estudiantes, cursos e inscripciones académicas. Utiliza formularios reactivos, validaciones dinámicas y almacenamiento local del navegador.
 
-## Development server
+## Características principales
 
-To start a local development server, run:
+### Módulo de Cursos
+Permite registrar, consultar, actualizar y eliminar cursos. Incluye validaciones para el código, nombre y cantidad de créditos.
 
-```bash
-ng serve
+### Módulo de Estudiantes
+Permite administrar la información de los estudiantes, incluyendo carnet, nombres, apellidos, carrera y otros datos académicos. Incorpora validaciones para evitar registros incompletos.
+
+### Módulo de Inscripciones
+Permite relacionar estudiantes con cursos mediante formularios dinámicos. Los desplegables utilizan la información registrada en los módulos correspondientes.
+
+### Persistencia de datos
+El sistema utiliza `localStorage` para conservar los registros en el navegador, incluso después de actualizar la página.
+
+La información se administra mediante servicios de Angular, evitando depender de listas fijas para los registros creados por el usuario.
+
+### Diseño y validaciones
+Los formularios utilizan etiquetas flotantes, indicadores visuales de error y botones de envío que se deshabilitan cuando los datos son inválidos.
+
+## Tecnologías utilizadas
+
+- Angular y TypeScript.
+- HTML5 y CSS3.
+- ReactiveFormsModule.
+- FormBuilder y Validators.
+- Servicios e inyección de dependencias.
+- localStorage.
+- Git y GitHub para el control de versiones.
+
+## Arquitectura del proyecto
+
+El sistema está organizado mediante componentes, modelos y servicios.
+
+```text
+src/
+├── app/
+│   ├── components/
+│   │   ├── cursos/
+│   │   ├── estudiantes/
+│   │   └── inscripciones/
+│   ├── models/
+│   │   ├── curso.ts
+│   │   ├── estudiante.ts
+│   │   └── inscripcion.ts
+│   ├── services/
+│   │   ├── cursos.service.ts
+│   │   ├── estudiante.ts
+│   │   ├── inscripcion.ts
+│   │   └── storage.service.ts
+│   └── app.routes.ts
+├── main.ts
+└── styles.css
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Los componentes administran la interfaz, los modelos representan los datos y los servicios gestionan la lógica y la persistencia.
 
-## Code scaffolding
+## Instalación y ejecución
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+**1. Clonar el repositorio**
 
 ```bash
-ng generate --help
+git clone https://github.com/davidsmorales9/angular_proyecto_final_VictorRecinos_DavidsMorales.git
 ```
 
-## Building
-
-To build the project run:
+**2. Ingresar al proyecto**
 
 ```bash
-ng build
+cd angular_proyecto_final_VictorRecinos_DavidsMorales
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+**3. Instalar dependencias**
 
 ```bash
-ng test
+npm install
 ```
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+**4. Ejecutar la aplicación**
 
 ```bash
-ng e2e
+npx ng serve
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+**5. Abrir en el navegador**
 
-## Additional Resources
+`http://localhost:4200/`
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## Verificación del sistema
+
+Durante el desarrollo se realizaron pruebas de compilación y funcionamiento de los módulos.
+
+Se comprobó la integración de estudiantes, cursos e inscripciones, así como la persistencia de los registros después de actualizar la página.
+
+Los botones de envío utilizan condiciones basadas en el estado de los formularios para impedir el envío cuando los datos son inválidos.
+
+## Trabajo colaborativo e historial de commits
+
+El proyecto se desarrolló de manera colaborativa mediante Git y GitHub.
+
+Se organizaron los cambios en commits independientes para facilitar su seguimiento, revisión e integración.
+
+Entre los trabajos realizados se encuentran:
+
+- Implementación de la gestión de cursos.
+- Desarrollo de formularios reactivos para estudiantes.
+- Integración de inscripciones con estudiantes y cursos.
+- Incorporación de validaciones dinámicas.
+- Mejoras visuales en los formularios.
+- Optimización de los servicios de almacenamiento.
+- Verificación de formularios y botones de envío.
+- Elaboración de documentación técnica.
+
+Los cambios fueron integrados mediante Pull Request al repositorio compartido.
+
+## Consideraciones
+
+Los datos se almacenan localmente en cada navegador. No se utiliza una base de datos externa ni existe sincronización automática entre diferentes computadoras.
+
+Para conservar la información, se debe evitar eliminar los datos del sitio almacenados en el navegador.
+
+## Repositorio
+
+https://github.com/davidsmorales9/angular_proyecto_final_VictorRecinos_DavidsMorales
