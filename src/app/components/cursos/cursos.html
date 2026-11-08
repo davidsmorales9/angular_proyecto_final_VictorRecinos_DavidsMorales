@@ -1,110 +1,105 @@
-
 <div class="container">
   <h2>Gestión de Cursos</h2>
 
-  <form
-    [formGroup]="formCurso"
-    (ngSubmit)="guardarCurso()"
-    class="card-form"
-    autocomplete="off">
+  <form [formGroup]="formCurso" (ngSubmit)="guardarCurso()" class="card-form" autocomplete="off">
 
     <div class="form-row">
 
-      <div class="full-width"
-           style="flex: 1;"
-           [class.has-error]="formCurso.get('codigo')?.invalid && formCurso.get('codigo')?.touched">
+      <!-- CÓDIGO DEL CURSO -->
+      <div class="full-width" style="flex: 1;"
+        [class.has-error]="formCurso.get('codigo')?.invalid && formCurso.get('codigo')?.touched">
 
         <div class="floating-label-group">
-          <input
-            type="text"
-            id="codigo"
-            formControlName="codigo"
-            placeholder=" "
-            autocomplete="off">
-
+          <input type="text" id="codigo" formControlName="codigo" placeholder=" " autocomplete="off">
           <label for="codigo">Código del curso*</label>
         </div>
 
-        <small
-          *ngIf="formCurso.get('codigo')?.invalid && formCurso.get('codigo')?.touched"
-          class="error-msg">
-          El dato es requerido
-        </small>
+        <div class="validation-error" *ngIf="formCurso.get('codigo')?.touched">
+          <span *ngIf="formCurso.get('codigo')?.hasError('required')">
+            El código del curso es obligatorio.
+          </span>
+
+          <span *ngIf="formCurso.get('codigo')?.hasError('pattern')">
+            El código no puede contener solamente espacios.
+          </span>
+        </div>
+
       </div>
 
-      <div class="full-width"
-           style="flex: 2;"
-           [class.has-error]="formCurso.get('nombre')?.invalid && formCurso.get('nombre')?.touched">
+      <!-- NOMBRE DEL CURSO -->
+      <div class="full-width" style="flex: 2;"
+        [class.has-error]="formCurso.get('nombre')?.invalid && formCurso.get('nombre')?.touched">
 
         <div class="floating-label-group">
-          <input
-            type="text"
-            id="nombre"
-            formControlName="nombre"
-            placeholder=" "
-            autocomplete="off">
-
+          <input type="text" id="nombre" formControlName="nombre" placeholder=" " autocomplete="off">
           <label for="nombre">Nombre del curso*</label>
         </div>
 
-        <small
-          *ngIf="formCurso.get('nombre')?.invalid && formCurso.get('nombre')?.touched"
-          class="error-msg">
-          El dato es requerido
-        </small>
+        <div class="validation-error" *ngIf="formCurso.get('nombre')?.touched">
+
+          <span *ngIf="formCurso.get('nombre')?.hasError('required')">
+            El nombre del curso es obligatorio.
+          </span>
+
+          <span *ngIf="formCurso.get('nombre')?.hasError('pattern')">
+            El nombre no puede contener solamente espacios.
+          </span>
+
+          <span *ngIf="formCurso.get('nombre')?.hasError('minlength')">
+            El nombre debe tener al menos 3 caracteres.
+          </span>
+
+          <span *ngIf="formCurso.get('nombre')?.hasError('maxlength')">
+            El nombre no puede superar los 100 caracteres.
+          </span>
+
+        </div>
+
       </div>
 
-      <div class="full-width"
-           style="flex: 1;"
-           [class.has-error]="formCurso.get('creditos')?.invalid && formCurso.get('creditos')?.touched">
+      <!-- CRÉDITOS -->
+      <div class="full-width" style="flex: 1;"
+        [class.has-error]="formCurso.get('creditos')?.invalid && formCurso.get('creditos')?.touched">
 
         <div class="floating-label-group">
-          <input
-            type="number"
-            id="creditos"
-            formControlName="creditos"
-            placeholder=" "
-            min="1">
-
+          <input type="number" id="creditos" formControlName="creditos" placeholder=" " min="1">
           <label for="creditos">Créditos*</label>
         </div>
 
-        <small
-          *ngIf="formCurso.get('creditos')?.hasError('required') && formCurso.get('creditos')?.touched"
-          class="error-msg">
-          El dato es requerido
-        </small>
+        <div class="validation-error" *ngIf="formCurso.get('creditos')?.touched">
 
-        <small
-          *ngIf="formCurso.get('creditos')?.hasError('min') && formCurso.get('creditos')?.touched"
-          class="error-msg">
-          Los créditos deben ser mayores o iguales a 1.
-        </small>
+          <span *ngIf="formCurso.get('creditos')?.hasError('required')">
+            Los créditos son obligatorios.
+          </span>
+
+          <span *ngIf="formCurso.get('creditos')?.hasError('min')">
+            Los créditos deben ser mayores o iguales a 1.
+          </span>
+
+        </div>
+
       </div>
 
     </div>
 
+    <!-- BOTONES -->
     <div class="form-actions">
 
-      <button
-        type="submit"
-        class="btn btn-primary"
-        [disabled]="formCurso.invalid">
+      <button type="submit" class="btn btn-primary" [disabled]="formCurso.invalid">
         {{ modoEdicion ? 'Actualizar' : 'Guardar' }}
       </button>
 
-      <button
-        type="button"
-        class="btn btn-secondary"
-        (click)="resetearFormulario()"
-        *ngIf="modoEdicion">
+      <button type="button" class="btn btn-secondary" (click)="resetearFormulario()" *ngIf="modoEdicion">
         Cancelar
       </button>
 
     </div>
+
   </form>
 
+  <!-- TABLA DE CURSOS -->
   <table class="tabla-custom">
+
     <thead>
       <tr>
         <th>Código</th>
@@ -115,23 +110,18 @@
     </thead>
 
     <tbody>
+
       <tr *ngFor="let item of cursos">
         <td>{{ item.codigo }}</td>
         <td>{{ item.nombre }}</td>
         <td>{{ item.creditos }}</td>
 
         <td>
-          <button
-            type="button"
-            class="btn-action edit"
-            (click)="editarCurso(item)">
+          <button type="button" class="btn-action edit" (click)="editarCurso(item)">
             Editar
           </button>
 
-          <button
-            type="button"
-            class="btn-action delete"
-            (click)="eliminarCurso(item.id)">
+          <button type="button" class="btn-action delete" (click)="eliminarCurso(item.id)">
             Eliminar
           </button>
         </td>
@@ -142,6 +132,9 @@
           No hay cursos registrados.
         </td>
       </tr>
+
     </tbody>
+
   </table>
+
 </div>
