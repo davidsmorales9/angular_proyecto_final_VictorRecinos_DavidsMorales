@@ -1,0 +1,208 @@
+
+.container {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.card-form {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #1f1f1f;
+}
+
+.form-row {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+  align-items: flex-start;
+}
+
+.full-width,
+.form-group {
+  flex: 1 1 200px;
+  min-width: 200px;
+}
+
+.form-group {
+  position: relative;
+}
+
+.floating-label-group {
+  position: relative;
+  width: 100%;
+}
+
+.floating-label-group input,
+.floating-label-group select {
+  width: 100%;
+  height: 56px;
+  padding: 16px 12px 4px;
+  border: 1px solid #666;
+  border-radius: 4px;
+  background: transparent;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.floating-label-group label {
+  position: absolute;
+  left: 12px;
+  top: 28px;
+  transform: translateY(-50%);
+  background: #f8f9fa;
+  padding: 0 4px;
+  color: #555;
+  font-size: 14px;
+  pointer-events: none;
+  transition: all 0.2s ease;
+}
+
+.floating-label-group:focus-within input,
+.floating-label-group:focus-within select {
+  border: 2px solid #007bff;
+}
+
+.floating-label-group:focus-within label,
+.floating-label-group input:not(:placeholder-shown) ~ label,
+.floating-label-group select ~ label,
+.floating-label-group input[type="date"] ~ label {
+  top: 0;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.floating-label-group:focus-within label {
+  color: #007bff;
+}
+
+.floating-label-group.has-error input,
+.floating-label-group.has-error select {
+  border: 2px solid #ff4d4d;
+}
+
+.floating-label-group.has-error label {
+  color: #ff4d4d;
+}
+
+.error-msg {
+  display: block;
+  color: #ff4d4d;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: #007bff;
+  color: white;
+}
+
+.btn-secondary {
+  background: #6c757d;
+  color: white;
+}
+
+.btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.tabla-custom {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabla-custom th,
+.tabla-custom td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+}
+
+.tabla-custom th {
+  background-color: #f1f1f1;
+}
+
+.btn-action {
+  padding: 4px 8px;
+  margin-right: 5px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-action.edit {
+  background: #ffc107;
+  color: black;
+}
+
+.btn-action.delete {
+  background: #dc3545;
+  color: white;
+}
+
+.no-data {
+  text-align: center;
+  color: #777;
+}
+
+/* Angular Material */
+:host {
+  --mdc-outlined-text-field-focus-outline-color: #007bff;
+  --mdc-outlined-text-field-focus-label-text-color: #007bff;
+  --mdc-outlined-text-field-error-outline-color: #ff4d4d;
+  --mdc-outlined-text-field-error-focus-outline-color: #ff4d4d;
+  --mdc-outlined-text-field-error-label-text-color: #ff4d4d;
+}
+
+mat-form-field {
+  font-family: Arial, sans-serif;
+}
+
+@media (max-width: 650px) {
+  .form-row {
+    flex-direction: column;
+  }
+
+  .full-width,
+  .form-group {
+    width: 100%;
+  }
+
+  .tabla-custom {
+    display: block;
+    overflow-x: auto;
+  }
+}
+
+.floating-label-group:focus-within label {
+  color: #007bff;
+}
+
+.floating-label-group.has-error label {
+  color: #ff4d4d;
+}
+
+.floating-label-group.has-error:focus-within label {
+  color: #ff4d4d;
+}

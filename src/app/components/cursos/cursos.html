@@ -1,1 +1,147 @@
-<p>cursos works!</p>
+
+<div class="container">
+  <h2>Gestión de Cursos</h2>
+
+  <form
+    [formGroup]="formCurso"
+    (ngSubmit)="guardarCurso()"
+    class="card-form"
+    autocomplete="off">
+
+    <div class="form-row">
+
+      <div class="full-width"
+           style="flex: 1;"
+           [class.has-error]="formCurso.get('codigo')?.invalid && formCurso.get('codigo')?.touched">
+
+        <div class="floating-label-group">
+          <input
+            type="text"
+            id="codigo"
+            formControlName="codigo"
+            placeholder=" "
+            autocomplete="off">
+
+          <label for="codigo">Código del curso*</label>
+        </div>
+
+        <small
+          *ngIf="formCurso.get('codigo')?.invalid && formCurso.get('codigo')?.touched"
+          class="error-msg">
+          El dato es requerido
+        </small>
+      </div>
+
+      <div class="full-width"
+           style="flex: 2;"
+           [class.has-error]="formCurso.get('nombre')?.invalid && formCurso.get('nombre')?.touched">
+
+        <div class="floating-label-group">
+          <input
+            type="text"
+            id="nombre"
+            formControlName="nombre"
+            placeholder=" "
+            autocomplete="off">
+
+          <label for="nombre">Nombre del curso*</label>
+        </div>
+
+        <small
+          *ngIf="formCurso.get('nombre')?.invalid && formCurso.get('nombre')?.touched"
+          class="error-msg">
+          El dato es requerido
+        </small>
+      </div>
+
+      <div class="full-width"
+           style="flex: 1;"
+           [class.has-error]="formCurso.get('creditos')?.invalid && formCurso.get('creditos')?.touched">
+
+        <div class="floating-label-group">
+          <input
+            type="number"
+            id="creditos"
+            formControlName="creditos"
+            placeholder=" "
+            min="1">
+
+          <label for="creditos">Créditos*</label>
+        </div>
+
+        <small
+          *ngIf="formCurso.get('creditos')?.hasError('required') && formCurso.get('creditos')?.touched"
+          class="error-msg">
+          El dato es requerido
+        </small>
+
+        <small
+          *ngIf="formCurso.get('creditos')?.hasError('min') && formCurso.get('creditos')?.touched"
+          class="error-msg">
+          Los créditos deben ser mayores o iguales a 1.
+        </small>
+      </div>
+
+    </div>
+
+    <div class="form-actions">
+
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="formCurso.invalid">
+        {{ modoEdicion ? 'Actualizar' : 'Guardar' }}
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-secondary"
+        (click)="resetearFormulario()"
+        *ngIf="modoEdicion">
+        Cancelar
+      </button>
+
+    </div>
+  </form>
+
+  <table class="tabla-custom">
+    <thead>
+      <tr>
+        <th>Código</th>
+        <th>Nombre</th>
+        <th>Créditos</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let item of cursos">
+        <td>{{ item.codigo }}</td>
+        <td>{{ item.nombre }}</td>
+        <td>{{ item.creditos }}</td>
+
+        <td>
+          <button
+            type="button"
+            class="btn-action edit"
+            (click)="editarCurso(item)">
+            Editar
+          </button>
+
+          <button
+            type="button"
+            class="btn-action delete"
+            (click)="eliminarCurso(item.id)">
+            Eliminar
+          </button>
+        </td>
+      </tr>
+
+      <tr *ngIf="cursos.length === 0">
+        <td colspan="4" class="no-data">
+          No hay cursos registrados.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
