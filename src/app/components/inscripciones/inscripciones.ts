@@ -88,10 +88,12 @@ export class Inscripciones implements OnInit {
   }
 
   guardarInscripcion(): void {
-    if (this.formInscripcion.invalid) {
-      this.formInscripcion.markAllAsTouched();
-      return;
-    }
+  this.cargarDatos();
+
+  if (this.formInscripcion.invalid) {
+    this.formInscripcion.markAllAsTouched();
+    return;
+  }
 
     const datos = this.formInscripcion.value;
 
