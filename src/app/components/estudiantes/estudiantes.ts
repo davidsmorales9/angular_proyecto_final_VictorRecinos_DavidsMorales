@@ -1,8 +1,10 @@
+
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormBuilder,
   FormGroup,
+  FormArray,
   ReactiveFormsModule,
   Validators,
   AbstractControl,
@@ -12,7 +14,7 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { EstudianteService } from '../../services/estudiante';
-import { Estudiante } from '../../models/estudiante';
+import { Estudiante, Contacto } from '../../models/estudiante';
 
 function validarRangoEdad(minEdad: number, maxEdad: number): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
@@ -21,6 +23,11 @@ function validarRangoEdad(minEdad: number, maxEdad: number): ValidatorFn {
     }
 
     const fechaNacimiento = new Date(control.value);
+
+    if (isNaN(fechaNacimiento.getTime())) {
+      return { fechaInvalida: true };
+    }
+
     const hoy = new Date();
 
     let edad = hoy.getFullYear() - fechaNacimiento.getFullYear();
@@ -31,11 +38,11 @@ function validarRangoEdad(minEdad: number, maxEdad: number): ValidatorFn {
     }
 
     if (edad < minEdad) {
-      return { edadMinima: { minPermitida: minEdad, edadActual: edad } };
+      return { edadMinima: true };
     }
 
     if (edad > maxEdad) {
-      return { edadMaxima: { maxPermitida: maxEdad, edadActual: edad } };
+      return { edadMaxima: true };
     }
 
     return null;
@@ -61,14 +68,23 @@ export class Estudiantes implements OnInit {
 
   estudiantes: Estudiante[] = [];
   formEstudiante!: FormGroup;
+
   modoEdicion: boolean = false;
   idEdicion: string | null = null;
+  filtroEstudiantes: string = '';
 
   generosCatalogo: string[] = [
     'Masculino',
     'Femenino',
     'Otro',
     'Prefiero no indicar'
+  ];
+
+  tiposContacto: string[] = [
+    'Móvil',
+    'Casa',
+    'Trabajo',
+    'Otro'
   ];
 
   ngOnInit(): void {
@@ -78,19 +94,53 @@ export class Estudiantes implements OnInit {
 
   inicializarFormulario(): void {
     this.formEstudiante = this.fb.group({
-      carnet: ['', Validators.required],
-      primerNombre: ['', Validators.required],
+      carnet: ['', [Validators.required, Validators.pattern(/\S/)]],
+      primerNombre: ['', [Validators.required, Validators.pattern(/\S/)]],
       segundoNombre: [''],
-      primerApellido: ['', Validators.required],
+      primerApellido: ['', [Validators.required, Validators.pattern(/\S/)]],
       segundoApellido: [''],
       correo: ['', [Validators.required, Validators.email]],
-      carrera: ['', Validators.required],
-      fechaNacimiento: ['', [Validators.required, validarRangoEdad(15, 100)]],
+      carrera: ['', [Validators.required, Validators.pattern(/\S/)]],
+      fechaNacimiento: ['', [
+        Validators.required,
+        validarRangoEdad(15, 100)
+      ]],
       genero: ['', Validators.required],
-      telefono: [''],
-      direccion: [''],
-      estatus: ['Activo']
+      telefonos: this.fb.array([]),
+      direccion: ['', [Validators.required, Validators.pattern(/\S/)]],
+      estatus: ['Activo', Validators.required]
     });
+  }
+
+  get telefonos(): FormArray {
+    return this.formEstudiante.get('telefonos') as FormArray;
+  }
+
+  crearTelefono(contacto?: Contacto): FormGroup {
+    return this.fb.group({
+      numero: [
+        contacto?.numero || '',
+        [
+          Validators.required,
+          Validators.pattern(/^[0-9]{8}$/)
+        ]
+      ],
+      tipo: [
+        contacto?.tipo || 'Móvil',
+        Validators.required
+      ],
+      activo: [
+        contacto?.activo ?? true
+      ]
+    });
+  }
+
+  agregarTelefono(): void {
+    this.telefonos.push(this.crearTelefono());
+  }
+
+  eliminarTelefono(index: number): void {
+    this.telefonos.removeAt(index);
   }
 
   cargarEstudiantes(): void {
@@ -105,28 +155,49 @@ export class Estudiantes implements OnInit {
 
     const datos = this.formEstudiante.value;
 
-    const estudiantePayload: Estudiante = {
-      id: this.idEdicion || Date.now().toString(),
-      carnet: datos.carnet,
-      nombres: `${datos.primerNombre} ${datos.segundoNombre || ''}`.trim(),
-      apellidos: `${datos.primerApellido} ${datos.segundoApellido || ''}`.trim(),
-      correo: datos.correo,
-      carrera: datos.carrera,
-      fechaNacimiento: datos.fechaNacimiento,
-      genero: datos.genero || 'Otro',
-      telefono: datos.telefono || '',
-      direccion: datos.direccion || '',
-      estatus: datos.estatus || 'Activo'
-    };
+    if (this.estudianteService.existeCarnet(
+      datos.carnet,
+      this.idEdicion || undefined
+    )) {
+      this.formEstudiante.get('carnet')?.setErrors({
+        duplicado: true
+      });
 
-    if (this.modoEdicion && this.idEdicion !== null) {
-      this.estudianteService.actualizarEstudiante(estudiantePayload);
-    } else {
-      this.estudianteService.agregarEstudiante(estudiantePayload);
+      this.formEstudiante.get('carnet')?.markAsTouched();
+      return;
     }
 
-    this.resetearFormulario();
-    this.cargarEstudiantes();
+    const estudiantePayload: Estudiante = {
+      id: this.idEdicion || crypto.randomUUID(),
+      carnet: datos.carnet.trim(),
+      nombres: `${datos.primerNombre.trim()} ${(datos.segundoNombre || '').trim()}`.trim(),
+      apellidos: `${datos.primerApellido.trim()} ${(datos.segundoApellido || '').trim()}`.trim(),
+      correo: datos.correo.trim(),
+      carrera: datos.carrera.trim(),
+      fechaNacimiento: datos.fechaNacimiento,
+      genero: datos.genero,
+      telefonos: datos.telefonos,
+      direccion: datos.direccion.trim(),
+      estatus: datos.estatus
+    };
+
+    try {
+      if (this.modoEdicion && this.idEdicion !== null) {
+        this.estudianteService.actualizarEstudiante(estudiantePayload);
+      } else {
+        this.estudianteService.agregarEstudiante(estudiantePayload);
+      }
+
+      this.resetearFormulario();
+      this.cargarEstudiantes();
+
+    } catch (error) {
+      this.formEstudiante.get('carnet')?.setErrors({
+        duplicado: true
+      });
+
+      this.formEstudiante.get('carnet')?.markAsTouched();
+    }
   }
 
   editarEstudiante(estudiante: Estudiante): void {
@@ -135,6 +206,12 @@ export class Estudiantes implements OnInit {
 
     const nombresArr = estudiante.nombres.split(' ');
     const apellidosArr = estudiante.apellidos.split(' ');
+
+    this.telefonos.clear();
+
+    for (const contacto of estudiante.telefonos || []) {
+      this.telefonos.push(this.crearTelefono(contacto));
+    }
 
     this.formEstudiante.patchValue({
       carnet: estudiante.carnet,
@@ -146,7 +223,6 @@ export class Estudiantes implements OnInit {
       carrera: estudiante.carrera,
       fechaNacimiento: estudiante.fechaNacimiento,
       genero: estudiante.genero,
-      telefono: estudiante.telefono,
       direccion: estudiante.direccion,
       estatus: estudiante.estatus
     });
@@ -167,6 +243,25 @@ export class Estudiantes implements OnInit {
   resetearFormulario(): void {
     this.modoEdicion = false;
     this.idEdicion = null;
-    this.formEstudiante.reset({ estatus: 'Activo' });
+
+    this.formEstudiante.reset({
+      estatus: 'Activo'
+    });
+
+    this.telefonos.clear();
+  }
+
+  get estudiantesFiltrados(): Estudiante[] {
+    const filtro = this.filtroEstudiantes.trim().toLowerCase();
+
+    if (!filtro) {
+      return this.estudiantes;
+    }
+
+    return this.estudiantes.filter(e =>
+      e.carnet.toLowerCase().includes(filtro) ||
+      e.nombres.toLowerCase().includes(filtro) ||
+      e.apellidos.toLowerCase().includes(filtro)
+    );
   }
 }

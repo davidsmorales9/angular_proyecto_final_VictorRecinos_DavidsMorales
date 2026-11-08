@@ -26,16 +26,27 @@ export class EstudianteService {
     let corregidos = false;
 
     const lista = estudiantes.map(estudiante => {
-      if (!estudiante.id) {
-        corregidos = true;
+      const id = estudiante.id || crypto.randomUUID();
 
-        return {
-          ...estudiante,
-          id: crypto.randomUUID()
-        };
+      const telefonos = Array.isArray(estudiante.telefonos)
+        ? estudiante.telefonos
+        : estudiante.telefono
+          ? [{
+              numero: estudiante.telefono,
+              tipo: 'Móvil',
+              activo: true
+            }]
+          : [];
+
+      if (!estudiante.id || !Array.isArray(estudiante.telefonos)) {
+        corregidos = true;
       }
 
-      return estudiante;
+      return {
+        ...estudiante,
+        id,
+        telefonos
+      };
     });
 
     if (corregidos) {
@@ -47,7 +58,6 @@ export class EstudianteService {
 
   private guardarEnStorage(estudiantes: Estudiante[]): void {
     this.storageService.setItem(this.STORAGE_KEY, estudiantes);
-
     this.estudiantesSubject.next(estudiantes);
   }
 
@@ -59,10 +69,21 @@ export class EstudianteService {
     return this.getEstudiantes().find(e => e.id === id);
   }
 
+  existeCarnet(carnet: string, idExcluir?: string): boolean {
+    return this.getEstudiantes().some(e =>
+      e.carnet.trim().toUpperCase() === carnet.trim().toUpperCase()
+      && e.id !== idExcluir
+    );
+  }
+
   agregarEstudiante(estudiante: Estudiante): void {
+    if (this.existeCarnet(estudiante.carnet)) {
+      throw new Error('Este carnet ya está registrado.');
+    }
+
     const nuevoEstudiante: Estudiante = {
       ...estudiante,
-      id: Date.now().toString()
+      id: crypto.randomUUID()
     };
 
     const lista = [
@@ -74,6 +95,10 @@ export class EstudianteService {
   }
 
   actualizarEstudiante(estudiante: Estudiante): void {
+    if (this.existeCarnet(estudiante.carnet, estudiante.id)) {
+      throw new Error('Este carnet ya está registrado.');
+    }
+
     const lista = this.getEstudiantes().map(e =>
       e.id === estudiante.id ? estudiante : e
     );
@@ -83,7 +108,6 @@ export class EstudianteService {
 
   eliminarEstudiante(id: string): void {
     const lista = this.getEstudiantes().filter(e => e.id !== id);
-
     this.guardarEnStorage(lista);
   }
 }

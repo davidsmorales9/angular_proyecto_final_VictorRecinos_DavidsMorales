@@ -13,16 +13,30 @@
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Carnet</mat-label>
         <input matInput formControlName="carnet" placeholder="Ej. EST001">
+
         <mat-error *ngIf="formEstudiante.get('carnet')?.hasError('required')">
           El dato es requerido
+        </mat-error>
+
+        <mat-error *ngIf="formEstudiante.get('carnet')?.hasError('pattern')">
+          El carnet no puede contener solo espacios.
+        </mat-error>
+
+        <mat-error *ngIf="formEstudiante.get('carnet')?.hasError('duplicado')">
+          Este carnet ya está registrado.
         </mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Primer nombre</mat-label>
         <input matInput formControlName="primerNombre" placeholder="Primer nombre">
+
         <mat-error *ngIf="formEstudiante.get('primerNombre')?.hasError('required')">
           El dato es requerido
+        </mat-error>
+
+        <mat-error *ngIf="formEstudiante.get('primerNombre')?.hasError('pattern')">
+          Ingresa un nombre válido.
         </mat-error>
       </mat-form-field>
 
@@ -38,8 +52,13 @@
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Primer apellido</mat-label>
         <input matInput formControlName="primerApellido" placeholder="Primer apellido">
+
         <mat-error *ngIf="formEstudiante.get('primerApellido')?.hasError('required')">
           El dato es requerido
+        </mat-error>
+
+        <mat-error *ngIf="formEstudiante.get('primerApellido')?.hasError('pattern')">
+          Ingresa un apellido válido.
         </mat-error>
       </mat-form-field>
 
@@ -50,7 +69,8 @@
 
       <div class="form-group">
         <div class="floating-label-group"
-             [class.has-error]="formEstudiante.get('fechaNacimiento')?.invalid && formEstudiante.get('fechaNacimiento')?.touched">
+             [class.has-error]="formEstudiante.get('fechaNacimiento')?.invalid &&
+                                formEstudiante.get('fechaNacimiento')?.touched">
 
           <input type="date"
                  id="fechaNacimiento"
@@ -60,18 +80,27 @@
         </div>
 
         <span class="error-msg"
-              *ngIf="formEstudiante.get('fechaNacimiento')?.hasError('required') && formEstudiante.get('fechaNacimiento')?.touched">
+              *ngIf="formEstudiante.get('fechaNacimiento')?.hasError('required') &&
+                     formEstudiante.get('fechaNacimiento')?.touched">
           El dato es requerido
         </span>
 
         <span class="error-msg"
-              *ngIf="formEstudiante.get('fechaNacimiento')?.hasError('edadMinima') && formEstudiante.get('fechaNacimiento')?.touched">
+              *ngIf="formEstudiante.get('fechaNacimiento')?.hasError('edadMinima') &&
+                     formEstudiante.get('fechaNacimiento')?.touched">
           El estudiante debe tener al menos 15 años.
         </span>
 
         <span class="error-msg"
-              *ngIf="formEstudiante.get('fechaNacimiento')?.hasError('edadMaxima') && formEstudiante.get('fechaNacimiento')?.touched">
+              *ngIf="formEstudiante.get('fechaNacimiento')?.hasError('edadMaxima') &&
+                     formEstudiante.get('fechaNacimiento')?.touched">
           La edad máxima permitida es de 100 años.
+        </span>
+
+        <span class="error-msg"
+              *ngIf="formEstudiante.get('fechaNacimiento')?.hasError('fechaInvalida') &&
+                     formEstudiante.get('fechaNacimiento')?.touched">
+          La fecha ingresada no es válida.
         </span>
       </div>
 
@@ -81,7 +110,10 @@
 
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Correo</mat-label>
-        <input matInput type="email" formControlName="correo" placeholder="correo@gmail.com">
+        <input matInput
+               type="email"
+               formControlName="correo"
+               placeholder="correo@gmail.com">
 
         <mat-error *ngIf="formEstudiante.get('correo')?.hasError('required')">
           El dato es requerido
@@ -99,17 +131,20 @@
         <mat-error *ngIf="formEstudiante.get('carrera')?.hasError('required')">
           El dato es requerido
         </mat-error>
+
+        <mat-error *ngIf="formEstudiante.get('carrera')?.hasError('pattern')">
+          Ingresa una carrera válida.
+        </mat-error>
       </mat-form-field>
 
       <div class="form-group">
         <div class="floating-label-group"
-             [class.has-error]="formEstudiante.get('genero')?.invalid && formEstudiante.get('genero')?.touched">
+             [class.has-error]="formEstudiante.get('genero')?.invalid &&
+                                formEstudiante.get('genero')?.touched">
 
-          <select id="genero"
-                  formControlName="genero"
-                  required>
-
+          <select id="genero" formControlName="genero" required>
             <option value="" disabled>Seleccione género...</option>
+
             <option *ngFor="let g of generosCatalogo" [value]="g">
               {{ g }}
             </option>
@@ -119,11 +154,106 @@
         </div>
 
         <span class="error-msg"
-              *ngIf="formEstudiante.get('genero')?.invalid && formEstudiante.get('genero')?.touched">
+              *ngIf="formEstudiante.get('genero')?.invalid &&
+                     formEstudiante.get('genero')?.touched">
           El dato es requerido
         </span>
       </div>
 
+    </div>
+
+    <div class="form-row">
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Dirección</mat-label>
+        <input matInput
+               formControlName="direccion"
+               placeholder="Dirección de residencia">
+
+        <mat-error *ngIf="formEstudiante.get('direccion')?.hasError('required')">
+          El dato es requerido
+        </mat-error>
+
+        <mat-error *ngIf="formEstudiante.get('direccion')?.hasError('pattern')">
+          Ingresa una dirección válida.
+        </mat-error>
+      </mat-form-field>
+
+      <div class="form-group">
+        <div class="floating-label-group">
+          <select id="estatus" formControlName="estatus">
+            <option value="Activo">Activo</option>
+            <option value="Inactivo">Inactivo</option>
+            <option value="Suspendido">Suspendido</option>
+          </select>
+
+          <label for="estatus">Estado del estudiante*</label>
+        </div>
+      </div>
+
+    </div>
+
+    <h3>Números de contacto</h3>
+
+    <div formArrayName="telefonos">
+
+      <div *ngFor="let telefono of telefonos.controls; let i = index"
+           [formGroupName]="i"
+           class="form-row">
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Número telefónico</mat-label>
+
+          <input matInput
+                 type="tel"
+                 formControlName="numero"
+                 maxlength="8"
+                 placeholder="Ej. 12345678">
+
+          <mat-error *ngIf="telefono.get('numero')?.hasError('required')">
+            El número es obligatorio.
+          </mat-error>
+
+          <mat-error *ngIf="telefono.get('numero')?.hasError('pattern')">
+            El número debe contener exactamente 8 dígitos.
+          </mat-error>
+        </mat-form-field>
+
+        <div class="form-group">
+          <div class="floating-label-group">
+            <select formControlName="tipo">
+              <option *ngFor="let tipo of tiposContacto" [value]="tipo">
+                {{ tipo }}
+              </option>
+            </select>
+
+            <label>Tipo de contacto</label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>
+            <input type="checkbox" formControlName="activo">
+            Contacto activo
+          </label>
+        </div>
+
+        <button type="button"
+                class="btn-action delete"
+                (click)="eliminarTelefono(i)">
+          Eliminar teléfono
+        </button>
+
+      </div>
+
+    </div>
+
+    <div class="form-actions">
+      <button type="button"
+              class="btn btn-secondary"
+              (click)="agregarTelefono()">
+        Agregar teléfono
+      </button>
     </div>
 
     <div class="form-actions">
@@ -150,6 +280,17 @@
 
   <hr>
 
+  <h3>Estudiantes registrados</h3>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Buscar estudiante</mat-label>
+
+    <input matInput
+           placeholder="Buscar por carnet, nombre o apellido"
+           [value]="filtroEstudiantes"
+           (input)="filtroEstudiantes = $any($event.target).value">
+  </mat-form-field>
+
   <table class="tabla-custom">
     <thead>
       <tr>
@@ -163,12 +304,14 @@
     </thead>
 
     <tbody>
-      <tr *ngFor="let e of estudiantes">
+
+      <tr *ngFor="let e of estudiantesFiltrados">
         <td>{{ e.carnet }}</td>
         <td>{{ e.nombres }}</td>
         <td>{{ e.apellidos }}</td>
         <td>{{ e.correo }}</td>
         <td>{{ e.carrera }}</td>
+
         <td>
           <button type="button"
                   (click)="editarEstudiante(e)"
@@ -184,11 +327,12 @@
         </td>
       </tr>
 
-      <tr *ngIf="estudiantes.length === 0">
+      <tr *ngIf="estudiantesFiltrados.length === 0">
         <td colspan="6" class="no-data">
-          No hay estudiantes registrados.
+          No se encontraron estudiantes.
         </td>
       </tr>
+
     </tbody>
   </table>
 </div>

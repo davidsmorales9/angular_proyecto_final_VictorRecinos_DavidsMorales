@@ -41,11 +41,15 @@ export class Inscripciones implements OnInit {
 
   formInscripcion!: FormGroup;
 
-  modoEdicion: boolean = false;
+  modoEdicion = false;
   idEdicion: string | null = null;
 
   listaEstatus = ESTATUS_INSCRIPCION;
   listaPeriodos = PERIODOS_INSCRIPCION;
+
+  filtroEstudiante = '';
+  filtroPeriodo = '';
+  filtroEstatus = '';
 
   constructor(
     private fb: FormBuilder,
@@ -62,12 +66,12 @@ export class Inscripciones implements OnInit {
   inicializarFormulario(): void {
     this.formInscripcion = this.fb.group({
       estudianteId: ['', Validators.required],
-      cursoId: ['', Validators.required],
+      cursoIds: [[], Validators.required],
       fechaInscripcion: [
         this.obtenerFechaActual(),
         Validators.required
       ],
-      periodo: ['Matutino', Validators.required],
+      periodo: ['2026-1', Validators.required],
       estatus: ['Registrada', Validators.required]
     });
   }
@@ -87,13 +91,32 @@ export class Inscripciones implements OnInit {
     this.inscripciones = this.inscripcionService.getInscripciones();
   }
 
-  guardarInscripcion(): void {
-  this.cargarDatos();
+  cambiarCurso(cursoId: string, seleccionado: boolean): void {
+    const cursos: string[] =
+      this.formInscripcion.get('cursoIds')?.value || [];
 
-  if (this.formInscripcion.invalid) {
-    this.formInscripcion.markAllAsTouched();
-    return;
+    const nuevosCursos = seleccionado
+      ? [...new Set([...cursos, cursoId])]
+      : cursos.filter(id => id !== cursoId);
+
+    this.formInscripcion.get('cursoIds')?.setValue(nuevosCursos);
+    this.formInscripcion.get('cursoIds')?.markAsTouched();
   }
+
+  cursoSeleccionado(cursoId: string): boolean {
+    const cursos: string[] =
+      this.formInscripcion.get('cursoIds')?.value || [];
+
+    return cursos.includes(cursoId);
+  }
+
+  guardarInscripcion(): void {
+    this.cargarDatos();
+
+    if (this.formInscripcion.invalid) {
+      this.formInscripcion.markAllAsTouched();
+      return;
+    }
 
     const datos = this.formInscripcion.value;
 
@@ -101,20 +124,22 @@ export class Inscripciones implements OnInit {
       e => e.id === datos.estudianteId
     );
 
-    const cursoExiste = this.cursosDisponibles.some(
-      c => c.id === datos.cursoId
-    );
+    const cursosValidos =
+      Array.isArray(datos.cursoIds) &&
+      datos.cursoIds.length > 0 &&
+      datos.cursoIds.every((id: string) =>
+        this.cursosDisponibles.some(c => c.id === id)
+      );
 
-    if (!estudianteExiste || !cursoExiste) {
-      alert('Seleccione un estudiante y un curso válidos.');
-      this.cargarDatos();
+    if (!estudianteExiste || !cursosValidos) {
+      alert('Seleccione un estudiante y cursos válidos.');
       return;
     }
 
     const payload: Inscripcion = {
       id: this.idEdicion || '',
       estudianteId: datos.estudianteId,
-      cursoId: datos.cursoId,
+      cursoIds: datos.cursoIds,
       fechaInscripcion: datos.fechaInscripcion,
       periodo: datos.periodo,
       estatus: datos.estatus
@@ -136,11 +161,23 @@ export class Inscripciones implements OnInit {
 
     this.formInscripcion.patchValue({
       estudianteId: inscripcion.estudianteId,
-      cursoId: inscripcion.cursoId,
+      cursoIds: [...inscripcion.cursoIds],
       fechaInscripcion: inscripcion.fechaInscripcion,
       periodo: inscripcion.periodo,
       estatus: inscripcion.estatus
     });
+  }
+
+  cancelarInscripcion(id: string): void {
+    if (confirm('¿Desea cancelar esta inscripción?')) {
+      this.inscripcionService.cancelarInscripcion(id);
+
+      if (this.idEdicion === id) {
+        this.resetearFormulario();
+      }
+
+      this.cargarDatos();
+    }
   }
 
   eliminarInscripcion(id: string): void {
@@ -161,9 +198,9 @@ export class Inscripciones implements OnInit {
 
     this.formInscripcion.reset({
       estudianteId: '',
-      cursoId: '',
+      cursoIds: [],
       fechaInscripcion: this.obtenerFechaActual(),
-      periodo: 'Matutino',
+      periodo: '2026-1',
       estatus: 'Registrada'
     });
   }
@@ -186,5 +223,29 @@ export class Inscripciones implements OnInit {
     return curso
       ? `${curso.codigo} - ${curso.nombre}`
       : 'Curso no encontrado';
+  }
+
+  getNombresCursos(cursoIds: string[]): string {
+    return cursoIds.map(id => this.getNombreCurso(id)).join(', ');
+  }
+
+  get inscripcionesFiltradas(): Inscripcion[] {
+    return this.inscripciones.filter(inscripcion => {
+      const coincideEstudiante =
+        !this.filtroEstudiante ||
+        inscripcion.estudianteId === this.filtroEstudiante;
+
+      const coincidePeriodo =
+        !this.filtroPeriodo ||
+        inscripcion.periodo === this.filtroPeriodo;
+
+      const coincideEstatus =
+        !this.filtroEstatus ||
+        inscripcion.estatus === this.filtroEstatus;
+
+      return coincideEstudiante &&
+             coincidePeriodo &&
+             coincideEstatus;
+    });
   }
 }

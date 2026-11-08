@@ -1,3 +1,4 @@
+
 <div class="container">
   <h2>Gestión de Cursos</h2>
 
@@ -10,18 +11,24 @@
         [class.has-error]="formCurso.get('codigo')?.invalid && formCurso.get('codigo')?.touched">
 
         <div class="floating-label-group">
-          <input type="text" id="codigo" formControlName="codigo" placeholder=" " autocomplete="off">
+          <input type="text" id="codigo" formControlName="codigo" placeholder=" " autocomplete="off" maxlength="8">
           <label for="codigo">Código del curso*</label>
         </div>
 
         <div class="validation-error" *ngIf="formCurso.get('codigo')?.touched">
+
           <span *ngIf="formCurso.get('codigo')?.hasError('required')">
             El código del curso es obligatorio.
           </span>
 
           <span *ngIf="formCurso.get('codigo')?.hasError('pattern')">
-            El código no puede contener solamente espacios.
+            El código debe tener 5 letras mayúsculas y 3 números, sin espacios ni caracteres especiales.
           </span>
+
+          <span *ngIf="formCurso.get('codigo')?.hasError('duplicado')">
+            Este código de curso ya está registrado.
+          </span>
+
         </div>
 
       </div>

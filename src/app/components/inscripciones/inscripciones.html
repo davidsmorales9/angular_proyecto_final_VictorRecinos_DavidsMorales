@@ -2,7 +2,6 @@
 <div class="container">
   <h2>Gestión de Inscripciones</h2>
 
-  <!-- Formulario para registrar y editar inscripciones -->
   <form
     [formGroup]="formInscripcion"
     (ngSubmit)="guardarInscripcion()"
@@ -13,22 +12,16 @@
       {{ modoEdicion ? 'Editar Inscripción' : 'Nueva Inscripción' }}
     </h3>
 
-    <!-- Primera fila: Estudiante y Curso -->
     <div class="form-row">
 
-      <!-- Selección dinámica de estudiantes -->
       <div
         class="full-width"
-        [class.has-error]="formInscripcion.get('estudianteId')?.invalid && formInscripcion.get('estudianteId')?.touched"
+        [class.has-error]="formInscripcion.get('estudianteId')?.invalid &&
+                           formInscripcion.get('estudianteId')?.touched"
       >
         <div class="floating-label-group">
-          <select
-            formControlName="estudianteId"
-            id="estudianteId"
-          >
-            <option value="" disabled>
-              Seleccione estudiante
-            </option>
+          <select formControlName="estudianteId" id="estudianteId">
+            <option value="" disabled>Seleccione estudiante</option>
 
             <option
               *ngFor="let estudiante of estudiantes"
@@ -44,55 +37,56 @@
         </div>
 
         <small
-          *ngIf="formInscripcion.get('estudianteId')?.invalid && formInscripcion.get('estudianteId')?.touched"
+          *ngIf="formInscripcion.get('estudianteId')?.invalid &&
+                 formInscripcion.get('estudianteId')?.touched"
           class="error-msg"
         >
-          Seleccione un estudiante
-        </small>
-      </div>
-
-      <!-- Selección dinámica de cursos -->
-      <div
-        class="full-width"
-        [class.has-error]="formInscripcion.get('cursoId')?.invalid && formInscripcion.get('cursoId')?.touched"
-      >
-        <div class="floating-label-group">
-          <select
-            formControlName="cursoId"
-            id="cursoId"
-          >
-            <option value="" disabled>
-              Seleccione curso
-            </option>
-
-            <option
-              *ngFor="let curso of cursosDisponibles"
-              [value]="curso.id"
-            >
-              {{ curso.codigo }} - {{ curso.nombre }}
-            </option>
-          </select>
-
-          <label for="cursoId">Curso*</label>
-        </div>
-
-        <small
-          *ngIf="formInscripcion.get('cursoId')?.invalid && formInscripcion.get('cursoId')?.touched"
-          class="error-msg"
-        >
-          Seleccione un curso
+          Seleccione un estudiante.
         </small>
       </div>
 
     </div>
 
-    <!-- Segunda fila: Fecha de inscripción y Período -->
+    <h3>Selección de cursos</h3>
+
+    <div
+  class="full-width formulario-cursos"
+  [class.has-error]="formInscripcion.get('cursoIds')?.invalid &&
+                     formInscripcion.get('cursoIds')?.touched"
+>
+
+      <div *ngFor="let curso of cursosDisponibles" class="form-group">
+        <label>
+          <input
+            type="checkbox"
+            [checked]="cursoSeleccionado(curso.id)"
+            (change)="cambiarCurso(curso.id, $any($event.target).checked)"
+          >
+
+          {{ curso.codigo }} - {{ curso.nombre }}
+        </label>
+      </div>
+
+      <small
+        *ngIf="formInscripcion.get('cursoIds')?.invalid &&
+               formInscripcion.get('cursoIds')?.touched"
+        class="error-msg"
+      >
+        Seleccione al menos un curso.
+      </small>
+
+      <p *ngIf="cursosDisponibles.length === 0">
+        No hay cursos registrados.
+      </p>
+
+    </div>
+
     <div class="form-row">
 
-      <!-- Fecha de inscripción obligatoria -->
       <div
         class="full-width"
-        [class.has-error]="formInscripcion.get('fechaInscripcion')?.invalid && formInscripcion.get('fechaInscripcion')?.touched"
+        [class.has-error]="formInscripcion.get('fechaInscripcion')?.invalid &&
+                           formInscripcion.get('fechaInscripcion')?.touched"
       >
         <div class="floating-label-group">
           <input
@@ -101,29 +95,25 @@
             id="fechaInscripcion"
           >
 
-          <label for="fechaInscripcion">
-            Fecha de inscripción*
-          </label>
+          <label for="fechaInscripcion">Fecha de inscripción*</label>
         </div>
 
         <small
-          *ngIf="formInscripcion.get('fechaInscripcion')?.invalid && formInscripcion.get('fechaInscripcion')?.touched"
+          *ngIf="formInscripcion.get('fechaInscripcion')?.invalid &&
+                 formInscripcion.get('fechaInscripcion')?.touched"
           class="error-msg"
         >
-          La fecha es requerida
+          La fecha es requerida.
         </small>
       </div>
 
-      <!-- Selección del período académico -->
       <div
         class="full-width"
-        [class.has-error]="formInscripcion.get('periodo')?.invalid && formInscripcion.get('periodo')?.touched"
+        [class.has-error]="formInscripcion.get('periodo')?.invalid &&
+                           formInscripcion.get('periodo')?.touched"
       >
         <div class="floating-label-group">
-          <select
-            formControlName="periodo"
-            id="periodoIns"
-          >
+          <select formControlName="periodo" id="periodoIns">
             <option
               *ngFor="let periodo of listaPeriodos"
               [value]="periodo"
@@ -132,32 +122,29 @@
             </option>
           </select>
 
-          <label for="periodoIns">Periodo*</label>
+          <label for="periodoIns">Período académico*</label>
         </div>
 
         <small
-          *ngIf="formInscripcion.get('periodo')?.invalid && formInscripcion.get('periodo')?.touched"
+          *ngIf="formInscripcion.get('periodo')?.invalid &&
+                 formInscripcion.get('periodo')?.touched"
           class="error-msg"
         >
-          Seleccione un período
+          Seleccione un período.
         </small>
       </div>
 
     </div>
 
-    <!-- Tercera fila: Estatus de inscripción -->
     <div class="form-row">
 
-      <!-- Selección del estado de la inscripción -->
       <div
         class="full-width"
-        [class.has-error]="formInscripcion.get('estatus')?.invalid && formInscripcion.get('estatus')?.touched"
+        [class.has-error]="formInscripcion.get('estatus')?.invalid &&
+                           formInscripcion.get('estatus')?.touched"
       >
         <div class="floating-label-group">
-          <select
-            formControlName="estatus"
-            id="estatusIns"
-          >
+          <select formControlName="estatus" id="estatusIns">
             <option
               *ngFor="let estatus of listaEstatus"
               [value]="estatus"
@@ -170,16 +157,16 @@
         </div>
 
         <small
-          *ngIf="formInscripcion.get('estatus')?.invalid && formInscripcion.get('estatus')?.touched"
+          *ngIf="formInscripcion.get('estatus')?.invalid &&
+                 formInscripcion.get('estatus')?.touched"
           class="error-msg"
         >
-          Seleccione un estatus
+          Seleccione un estatus.
         </small>
       </div>
 
     </div>
 
-    <!-- Botones para guardar, actualizar y cancelar -->
     <div class="form-actions">
 
       <button
@@ -196,7 +183,7 @@
         class="btn btn-secondary"
         (click)="resetearFormulario()"
       >
-        Cancelar
+        Cancelar edición
       </button>
 
     </div>
@@ -205,15 +192,78 @@
 
   <hr>
 
-  <!-- Tabla de inscripciones registradas -->
-  <table class="tabla-custom">
+  <h3>Inscripciones registradas</h3>
 
+  <div class="form-row">
+
+    <div class="full-width">
+      <div class="floating-label-group">
+        <select
+          [value]="filtroEstudiante"
+          (change)="filtroEstudiante = $any($event.target).value"
+          id="filtroEstudiante"
+        >
+          <option value="">Todos los estudiantes</option>
+
+          <option
+            *ngFor="let estudiante of estudiantes"
+            [value]="estudiante.id"
+          >
+            {{ estudiante.carnet }} -
+            {{ estudiante.nombres }}
+            {{ estudiante.apellidos }}
+          </option>
+        </select>
+
+        <label for="filtroEstudiante">Filtrar por estudiante</label>
+      </div>
+    </div>
+
+    <div class="full-width">
+      <div class="floating-label-group">
+        <select
+          [value]="filtroPeriodo"
+          (change)="filtroPeriodo = $any($event.target).value"
+          id="filtroPeriodo"
+        >
+          <option value="">Todos los períodos</option>
+
+          <option *ngFor="let periodo of listaPeriodos" [value]="periodo">
+            {{ periodo }}
+          </option>
+        </select>
+
+        <label for="filtroPeriodo">Filtrar por período</label>
+      </div>
+    </div>
+
+    <div class="full-width">
+      <div class="floating-label-group">
+        <select
+          [value]="filtroEstatus"
+          (change)="filtroEstatus = $any($event.target).value"
+          id="filtroEstatus"
+        >
+          <option value="">Todos los estados</option>
+
+          <option *ngFor="let estatus of listaEstatus" [value]="estatus">
+            {{ estatus }}
+          </option>
+        </select>
+
+        <label for="filtroEstatus">Filtrar por estado</label>
+      </div>
+    </div>
+
+  </div>
+
+  <table class="tabla-custom">
     <thead>
       <tr>
         <th>Estudiante</th>
-        <th>Curso</th>
+        <th>Cursos</th>
         <th>Fecha</th>
-        <th>Periodo</th>
+        <th>Período</th>
         <th>Estatus</th>
         <th>Acciones</th>
       </tr>
@@ -221,16 +271,11 @@
 
     <tbody>
 
-      <!-- Recorrido dinámico de inscripciones -->
-      <tr *ngFor="let item of inscripciones">
+      <tr *ngFor="let item of inscripcionesFiltradas">
 
-        <td>
-          {{ getNombreEstudiante(item.estudianteId) }}
-        </td>
+        <td>{{ getNombreEstudiante(item.estudianteId) }}</td>
 
-        <td>
-          {{ getNombreCurso(item.cursoId) }}
-        </td>
+        <td>{{ getNombresCursos(item.cursoIds) }}</td>
 
         <td>{{ item.fechaInscripcion }}</td>
 
@@ -239,7 +284,6 @@
         <td>{{ item.estatus }}</td>
 
         <td>
-          <!-- Botón para editar inscripción -->
           <button
             type="button"
             class="btn-action edit"
@@ -248,7 +292,15 @@
             Editar
           </button>
 
-          <!-- Botón para eliminar inscripción -->
+          <button
+            type="button"
+            class="btn-action delete"
+            *ngIf="item.estatus !== 'Cancelada'"
+            (click)="cancelarInscripcion(item.id)"
+          >
+            Cancelar
+          </button>
+
           <button
             type="button"
             class="btn-action delete"
@@ -260,10 +312,9 @@
 
       </tr>
 
-      <!-- Mensaje cuando no existen inscripciones -->
-      <tr *ngIf="inscripciones.length === 0">
+      <tr *ngIf="inscripcionesFiltradas.length === 0">
         <td colspan="6" class="no-data">
-          No hay inscripciones registradas.
+          No se encontraron inscripciones.
         </td>
       </tr>
 

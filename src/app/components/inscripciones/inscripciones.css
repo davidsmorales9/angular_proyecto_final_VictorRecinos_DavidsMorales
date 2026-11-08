@@ -199,3 +199,11 @@
         overflow-x: auto;
     }
 }
+
+.formulario-cursos {
+  margin-bottom: 30px;
+}
+
+.formulario-cursos .form-group {
+  margin-bottom: 10px;
+}
