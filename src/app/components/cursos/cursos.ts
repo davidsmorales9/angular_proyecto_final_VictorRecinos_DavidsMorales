@@ -27,12 +27,12 @@ export class Cursos implements OnInit {
   }
 
   inicializarFormulario(): void {
-    this.formCurso = this.fb.group({
-      codigo: ['', [Validators.required]],
-      nombre: ['', [Validators.required]],
-      creditos: ['', [Validators.required, Validators.min(1)]]
-    });
-  }
+  this.formCurso = this.fb.group({
+    codigo: ['', [Validators.required, Validators.pattern(/\S/)]],
+    nombre: ['', [Validators.required, Validators.pattern(/\S/)]],
+    creditos: ['', [Validators.required, Validators.min(1)]]
+  });
+}
 
   cargarCursos(): void {
     this.cursos = this.cursosService.getCursos();
