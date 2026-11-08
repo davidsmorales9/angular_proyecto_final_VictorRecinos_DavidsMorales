@@ -1,5 +1,6 @@
 
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+import { StorageService } from './storage.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Estudiante } from '../models/estudiante';
 
@@ -8,6 +9,7 @@ import { Estudiante } from '../models/estudiante';
 })
 export class EstudianteService {
   private readonly STORAGE_KEY = 'academic_estudiantes';
+  private readonly storageService = inject(StorageService);
 
   private estudiantesSubject = new BehaviorSubject<Estudiante[]>([]);
 
@@ -19,8 +21,7 @@ export class EstudianteService {
   }
 
   private cargarDeStorage(): void {
-    const data = localStorage.getItem(this.STORAGE_KEY);
-    const estudiantes: Estudiante[] = data ? JSON.parse(data) : [];
+    const estudiantes = this.storageService.getItem<Estudiante>(this.STORAGE_KEY);
 
     let corregidos = false;
 
@@ -45,10 +46,7 @@ export class EstudianteService {
   }
 
   private guardarEnStorage(estudiantes: Estudiante[]): void {
-    localStorage.setItem(
-      this.STORAGE_KEY,
-      JSON.stringify(estudiantes)
-    );
+    this.storageService.setItem(this.STORAGE_KEY, estudiantes);
 
     this.estudiantesSubject.next(estudiantes);
   }
