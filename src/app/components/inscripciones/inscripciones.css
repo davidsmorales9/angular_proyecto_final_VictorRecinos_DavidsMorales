@@ -1,12 +1,14 @@
+
 /* Contenedor general del módulo */
 .container {
     padding: 20px;
     display: flex;
     flex-direction: column;
     gap: 20px;
+    font-family: Arial, sans-serif;
 }
 
-/* Tarjeta contenedora del formulario con borde rojo característico */
+/* Tarjeta contenedora del formulario con borde característico */
 .card-form {
     background: #f8f9fa;
     padding: 20px;
@@ -20,6 +22,7 @@
     gap: 15px;
     flex-wrap: wrap;
     margin-bottom: 15px;
+    align-items: flex-start;
 }
 
 /* Contenedor flexible de ancho completo para cada campo */
@@ -44,18 +47,18 @@
     padding: 16px 12px 4px 12px;
     border: 1px solid #ccc;
     border-radius: 4px;
+    font-family: Arial, sans-serif;
     font-size: 14px;
     outline: none;
     background: #fff;
     box-sizing: border-box;
+    transition: border-color 0.2s ease-in-out;
 }
 
 /* Efecto de enfoque (Focus) en campos del formulario */
 .floating-label-group input:focus,
 .floating-label-group select:focus {
-    border-color: #007bff;
-    border-width: 2px;
-    padding: 15px 11px 3px 11px;
+    border: 2px solid #007bff;
 }
 
 /* Estilo y transición de la etiqueta flotante */
@@ -64,40 +67,47 @@
     left: 12px;
     top: 50%;
     transform: translateY(-50%);
-    background: #fff;
+    background: #f8f9fa;
     padding: 0 4px;
     color: #666;
     font-size: 14px;
     pointer-events: none;
-    transition: 0.2s ease all;
+    transition: all 0.2s ease-in-out;
 }
 
 /* Comportamiento al enfocar o rellenar el campo */
-.floating-label-group input:focus~label,
-.floating-label-group input:not(:placeholder-shown)~label,
-.floating-label-group select:focus~label,
-.floating-label-group select:not([value=""])~label {
+.floating-label-group input:focus ~ label,
+.floating-label-group input:not(:placeholder-shown) ~ label,
+.floating-label-group input[type="date"] ~ label,
+.floating-label-group select ~ label {
     top: 0;
-    transform: translateY(-50%) scale(0.85);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* Color azul para la etiqueta cuando el campo tiene enfoque */
+.floating-label-group input:focus ~ label,
+.floating-label-group select:focus ~ label {
     color: #007bff;
-    font-weight: bold;
 }
 
 /* Estados de error en validaciones */
-.full-width.has-error .floating-label-group input {
-    border-color: #dc3545;
-    border-width: 2px;
+.full-width.has-error .floating-label-group input,
+.full-width.has-error .floating-label-group select {
+    border: 2px solid #ff4d4d;
 }
 
+/* Color rojo para etiquetas de campos inválidos */
 .full-width.has-error .floating-label-group label {
-    color: #dc3545;
+    color: #ff4d4d;
 }
 
 /* Mensaje de texto de error */
 .error-msg {
-    color: #dc3545;
+    display: block;
+    color: #ff4d4d;
     font-size: 12px;
-    margin-top: 4px;
+    margin-top: 5px;
 }
 
 /* Contenedor de botones de acción */
@@ -170,4 +180,22 @@
 .no-data {
     text-align: center;
     color: #777;
+}
+
+/* Diseño adaptable para pantallas pequeñas */
+@media (max-width: 650px) {
+    .form-row {
+        flex-direction: column;
+    }
+
+    .full-width {
+        width: 100%;
+        min-width: 0;
+        flex: none;
+    }
+
+    .tabla-custom {
+        display: block;
+        overflow-x: auto;
+    }
 }

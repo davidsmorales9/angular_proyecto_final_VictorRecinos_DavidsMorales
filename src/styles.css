@@ -1,3 +1,5 @@
+@import '@angular/material/prebuilt-themes/azure-blue.css';
+
 html, body {
   height: 100%;
 }
@@ -5,4 +7,82 @@ html, body {
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+
+/* Etiquetas flotantes compartidas */
+.floating-label-group {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.floating-label-group input,
+.floating-label-group select {
+  width: 100%;
+  min-height: 48px;
+  padding: 16px 12px 6px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: white;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s ease-in-out;
+}
+
+.floating-label-group label {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 0 4px;
+  background: white;
+  color: #666;
+  pointer-events: none;
+  transition: all 0.2s ease-in-out;
+}
+
+.floating-label-group input:focus,
+.floating-label-group select:focus {
+  border-color: #007bff;
+}
+
+.floating-label-group input:focus ~ label,
+.floating-label-group input:not(:placeholder-shown) ~ label,
+.floating-label-group select:focus ~ label,
+.floating-label-group select:valid ~ label {
+  top: 0;
+  font-size: 0.75rem;
+  color: #007bff;
+  font-weight: 600;
+}
+
+.has-error .floating-label-group input,
+.has-error .floating-label-group select {
+  border: 2px solid #ff4d4d !important;
+}
+
+.error-msg {
+  display: block;
+  margin-top: 0.25rem;
+  color: #ff4d4d;
+  font-size: 0.75rem;
+}
+
+/* Angular Material */
+.mat-mdc-form-field {
+  --mdc-outlined-text-field-focus-outline-color: #007bff;
+  --mdc-outlined-text-field-focus-label-text-color: #007bff;
+  --mdc-outlined-text-field-error-outline-color: #ff4d4d;
+  --mdc-outlined-text-field-error-focus-outline-color: #ff4d4d;
+  --mdc-outlined-text-field-error-label-text-color: #ff4d4d;
+  --mdc-outlined-text-field-outline-width: 1px;
+  --mdc-outlined-text-field-focus-outline-width: 2px;
+}
+
+.mat-mdc-form-field.mat-form-field-invalid {
+  --mdc-outlined-text-field-outline-width: 2px;
+  --mdc-outlined-text-field-error-outline-width: 2px;
+  --mdc-outlined-text-field-error-hover-outline-width: 2px;
+  --mdc-outlined-text-field-error-focus-outline-width: 2px;
 }

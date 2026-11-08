@@ -2,6 +2,7 @@
 <div class="container">
   <h2>Gestión de Inscripciones</h2>
 
+  <!-- Formulario para registrar y editar inscripciones -->
   <form
     [formGroup]="formInscripcion"
     (ngSubmit)="guardarInscripcion()"
@@ -12,15 +13,22 @@
       {{ modoEdicion ? 'Editar Inscripción' : 'Nueva Inscripción' }}
     </h3>
 
+    <!-- Primera fila: Estudiante y Curso -->
     <div class="form-row">
 
+      <!-- Selección dinámica de estudiantes -->
       <div
         class="full-width"
         [class.has-error]="formInscripcion.get('estudianteId')?.invalid && formInscripcion.get('estudianteId')?.touched"
       >
         <div class="floating-label-group">
-          <select formControlName="estudianteId" id="estudianteId">
-            <option value="" disabled>Seleccione estudiante</option>
+          <select
+            formControlName="estudianteId"
+            id="estudianteId"
+          >
+            <option value="" disabled>
+              Seleccione estudiante
+            </option>
 
             <option
               *ngFor="let estudiante of estudiantes"
@@ -43,13 +51,19 @@
         </small>
       </div>
 
+      <!-- Selección dinámica de cursos -->
       <div
         class="full-width"
         [class.has-error]="formInscripcion.get('cursoId')?.invalid && formInscripcion.get('cursoId')?.touched"
       >
         <div class="floating-label-group">
-          <select formControlName="cursoId" id="cursoId">
-            <option value="" disabled>Seleccione curso</option>
+          <select
+            formControlName="cursoId"
+            id="cursoId"
+          >
+            <option value="" disabled>
+              Seleccione curso
+            </option>
 
             <option
               *ngFor="let curso of cursosDisponibles"
@@ -72,9 +86,14 @@
 
     </div>
 
+    <!-- Segunda fila: Fecha de inscripción y Período -->
     <div class="form-row">
 
-      <div class="full-width">
+      <!-- Fecha de inscripción obligatoria -->
+      <div
+        class="full-width"
+        [class.has-error]="formInscripcion.get('fechaInscripcion')?.invalid && formInscripcion.get('fechaInscripcion')?.touched"
+      >
         <div class="floating-label-group">
           <input
             type="date"
@@ -95,9 +114,16 @@
         </small>
       </div>
 
-      <div class="full-width">
+      <!-- Selección del período académico -->
+      <div
+        class="full-width"
+        [class.has-error]="formInscripcion.get('periodo')?.invalid && formInscripcion.get('periodo')?.touched"
+      >
         <div class="floating-label-group">
-          <select formControlName="periodo" id="periodoIns">
+          <select
+            formControlName="periodo"
+            id="periodoIns"
+          >
             <option
               *ngFor="let periodo of listaPeriodos"
               [value]="periodo"
@@ -108,15 +134,30 @@
 
           <label for="periodoIns">Periodo*</label>
         </div>
+
+        <small
+          *ngIf="formInscripcion.get('periodo')?.invalid && formInscripcion.get('periodo')?.touched"
+          class="error-msg"
+        >
+          Seleccione un período
+        </small>
       </div>
 
     </div>
 
+    <!-- Tercera fila: Estatus de inscripción -->
     <div class="form-row">
 
-      <div class="full-width">
+      <!-- Selección del estado de la inscripción -->
+      <div
+        class="full-width"
+        [class.has-error]="formInscripcion.get('estatus')?.invalid && formInscripcion.get('estatus')?.touched"
+      >
         <div class="floating-label-group">
-          <select formControlName="estatus" id="estatusIns">
+          <select
+            formControlName="estatus"
+            id="estatusIns"
+          >
             <option
               *ngFor="let estatus of listaEstatus"
               [value]="estatus"
@@ -127,10 +168,18 @@
 
           <label for="estatusIns">Estatus*</label>
         </div>
+
+        <small
+          *ngIf="formInscripcion.get('estatus')?.invalid && formInscripcion.get('estatus')?.touched"
+          class="error-msg"
+        >
+          Seleccione un estatus
+        </small>
       </div>
 
     </div>
 
+    <!-- Botones para guardar, actualizar y cancelar -->
     <div class="form-actions">
 
       <button
@@ -156,7 +205,9 @@
 
   <hr>
 
+  <!-- Tabla de inscripciones registradas -->
   <table class="tabla-custom">
+
     <thead>
       <tr>
         <th>Estudiante</th>
@@ -170,6 +221,7 @@
 
     <tbody>
 
+      <!-- Recorrido dinámico de inscripciones -->
       <tr *ngFor="let item of inscripciones">
 
         <td>
@@ -187,6 +239,7 @@
         <td>{{ item.estatus }}</td>
 
         <td>
+          <!-- Botón para editar inscripción -->
           <button
             type="button"
             class="btn-action edit"
@@ -195,6 +248,7 @@
             Editar
           </button>
 
+          <!-- Botón para eliminar inscripción -->
           <button
             type="button"
             class="btn-action delete"
@@ -206,6 +260,7 @@
 
       </tr>
 
+      <!-- Mensaje cuando no existen inscripciones -->
       <tr *ngIf="inscripciones.length === 0">
         <td colspan="6" class="no-data">
           No hay inscripciones registradas.
