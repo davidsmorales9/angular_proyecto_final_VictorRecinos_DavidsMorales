@@ -123,4 +123,8 @@ Para conservar la información, se debe evitar eliminar los datos del sitio alma
 
 ## Repositorio
 
+<<<<<<< HEAD
 https://github.com/davidsmorales9/angular_proyecto_final_VictorRecinos_DavidsMorales
+=======
+https://github.com/davidsmorales9/angular_proyecto_final_VictorRecinos_DavidsMorales
+>>>>>>> origin/main
