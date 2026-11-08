@@ -1,0 +1,175 @@
+
+.container {
+  max-width: 900px;
+  margin: 30px auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  background: #fff;
+}
+
+.card-form {
+  width: 100%;
+}
+
+.form-row {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.full-width {
+  min-width: 0;
+}
+
+.floating-label-group {
+  position: relative;
+  margin-top: 5px;
+}
+
+.floating-label-group input {
+  width: 100%;
+  height: 48px;
+  padding: 16px 12px 4px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  background: #fff;
+  outline: none;
+  transition: border-color 0.2s ease-in-out;
+}
+
+.floating-label-group label {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #fff;
+  padding: 0 4px;
+  color: #555;
+  font-size: 14px;
+  pointer-events: none;
+  transition: all 0.2s ease-in-out;
+}
+
+/* Campo enfocado */
+.floating-label-group input:focus {
+  border: 2px solid #007bff;
+}
+
+/* Etiqueta flotante */
+.floating-label-group input:focus ~ label,
+.floating-label-group input:not(:placeholder-shown) ~ label {
+  top: 0;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Etiqueta azul al enfocar */
+.floating-label-group input:focus ~ label {
+  color: #007bff;
+}
+
+/* Bordes de error */
+.full-width.has-error .floating-label-group input {
+  border: 2px solid #ff4d4d;
+}
+
+.full-width.has-error .floating-label-group label {
+  color: #ff4d4d;
+}
+
+.error-msg {
+  display: block;
+  color: #ff4d4d;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+/* Botones */
+.form-actions {
+  display: flex;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.btn {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: #007bff;
+  color: #fff;
+}
+
+.btn-secondary {
+  background: #6c757d;
+  color: #fff;
+}
+
+.btn:disabled {
+  background: #ccc;
+  color: #fff;
+  cursor: not-allowed;
+}
+
+/* Tabla */
+.tabla-custom {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.tabla-custom th,
+.tabla-custom td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+}
+
+.tabla-custom th {
+  background: #f8f8f8;
+}
+
+.btn-action {
+  padding: 6px 10px;
+  margin-right: 8px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.edit {
+  background: #f0ad4e;
+  color: #000;
+}
+
+.delete {
+  background: #ff4d4d;
+  color: #fff;
+}
+
+.no-data {
+  text-align: center !important;
+}
+
+/* Diseño adaptable */
+@media (max-width: 650px) {
+  .form-row {
+    flex-direction: column;
+  }
+
+  .full-width {
+    width: 100%;
+    flex: none !important;
+  }
+
+  .tabla-custom {
+    display: block;
+    overflow-x: auto;
+  }
+}
