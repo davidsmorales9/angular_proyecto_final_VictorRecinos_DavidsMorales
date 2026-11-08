@@ -1,0 +1,173 @@
+/* Contenedor general del módulo */
+.container {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Tarjeta contenedora del formulario con borde rojo característico */
+.card-form {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #1f1f1f;
+}
+
+/* Fila flexible para distribuir los elementos del formulario */
+.form-row {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+}
+
+/* Contenedor flexible de ancho completo para cada campo */
+.full-width {
+    flex: 1;
+    min-width: 200px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Grupo de posición para la etiqueta flotante */
+.floating-label-group {
+    position: relative;
+    width: 100%;
+}
+
+/* Estandarización de altura fija (48px) para inputs y selects */
+.floating-label-group input,
+.floating-label-group select {
+    width: 100%;
+    height: 48px;
+    padding: 16px 12px 4px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    outline: none;
+    background: #fff;
+    box-sizing: border-box;
+}
+
+/* Efecto de enfoque (Focus) en campos del formulario */
+.floating-label-group input:focus,
+.floating-label-group select:focus {
+    border-color: #007bff;
+    border-width: 2px;
+    padding: 15px 11px 3px 11px;
+}
+
+/* Estilo y transición de la etiqueta flotante */
+.floating-label-group label {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #fff;
+    padding: 0 4px;
+    color: #666;
+    font-size: 14px;
+    pointer-events: none;
+    transition: 0.2s ease all;
+}
+
+/* Comportamiento al enfocar o rellenar el campo */
+.floating-label-group input:focus~label,
+.floating-label-group input:not(:placeholder-shown)~label,
+.floating-label-group select:focus~label,
+.floating-label-group select:not([value=""])~label {
+    top: 0;
+    transform: translateY(-50%) scale(0.85);
+    color: #007bff;
+    font-weight: bold;
+}
+
+/* Estados de error en validaciones */
+.full-width.has-error .floating-label-group input {
+    border-color: #dc3545;
+    border-width: 2px;
+}
+
+.full-width.has-error .floating-label-group label {
+    color: #dc3545;
+}
+
+/* Mensaje de texto de error */
+.error-msg {
+    color: #dc3545;
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+/* Contenedor de botones de acción */
+.form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+/* Estilos base para botones */
+.btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background: #007bff;
+    color: white;
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.btn:disabled {
+    background: #cccccc;
+    cursor: not-allowed;
+}
+
+/* Estilos de la tabla de registros personalizada */
+.tabla-custom {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tabla-custom th,
+.tabla-custom td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+.tabla-custom th {
+    background-color: #f1f1f1;
+}
+
+/* Botones de acción dentro de la tabla */
+.btn-action {
+    padding: 4px 8px;
+    margin-right: 5px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-action.edit {
+    background: #ffc107;
+    color: black;
+}
+
+.btn-action.delete {
+    background: #dc3545;
+    color: white;
+}
+
+/* Texto cuando no existen registros */
+.no-data {
+    text-align: center;
+    color: #777;
+}
