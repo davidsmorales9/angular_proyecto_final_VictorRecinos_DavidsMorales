@@ -108,9 +108,9 @@ export class Estudiantes implements OnInit, OnDestroy {
   inicializarFormulario(): void {
     this.formEstudiante = this.fb.group({
       carnet: ['', [
-        Validators.required,
-        Validators.pattern(/\S/)
-      ]],
+  Validators.required,
+  Validators.pattern(/^EST[0-9]{4}$/)
+]],
       primerNombre: ['', [
         Validators.required,
         Validators.pattern(/\S/)

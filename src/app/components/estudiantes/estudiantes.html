@@ -14,6 +14,12 @@
         <mat-label>Carnet</mat-label>
         <input matInput formControlName="carnet" placeholder="Ej. EST001">
 
+        @if (formEstudiante.get('carnet')?.hasError('pattern')) {
+  <small class="text-danger">
+    El carnet debe comenzar con EST seguido de 4 números.
+    Ejemplo: EST1234.
+  </small>
+}
         <mat-error *ngIf="formEstudiante.get('carnet')?.hasError('required')">
           El dato es requerido
         </mat-error>

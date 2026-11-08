@@ -125,17 +125,25 @@ export class RespaldoService {
         idsEstudiantes.add(item['id']);
       }
 
-      if (!textoValido(item['carnet'])) {
-        errores.push(`${fila}: carnet obligatorio.`);
-      } else {
-        const carnet = item['carnet'].trim().toUpperCase();
+      
+if (!textoValido(item['carnet'])) {
+  errores.push(`${fila}: carnet obligatorio.`);
+} else {
+  const carnet = item['carnet'];
 
-        if (carnets.has(carnet)) {
-          errores.push(`${fila}: carnet duplicado.`);
-        }
+  if (!/^EST[0-9]{4}$/.test(carnet)) {
+    errores.push(
+      `${fila}: carnet inválido. Debe comenzar con EST seguido de 4 números. Ejemplo: EST1234.`
+    );
+  }
 
-        carnets.add(carnet);
-      }
+  if (carnets.has(carnet)) {
+    errores.push(`${fila}: carnet duplicado.`);
+  } else {
+    carnets.add(carnet);
+  }
+}
+
 
       for (const campo of [
         'nombres',
