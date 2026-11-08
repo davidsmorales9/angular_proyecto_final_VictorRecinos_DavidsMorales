@@ -6,7 +6,7 @@ import { Curso } from '../models/curso';
   providedIn: 'root'
 })
 export class CursoService {
-  private readonly STORAGE_KEY = 'academic_cursos';
+  private readonly STORAGE_KEY = 'cursos_db';
   private cursosSubject = new BehaviorSubject<Curso[]>([]);
   public cursos$: Observable<Curso[]> = this.cursosSubject.asObservable();
 
@@ -47,4 +47,8 @@ export class CursoService {
     const lista = this.getCursos().filter(c => c.id !== id);
     this.guardarEnStorage(lista);
   }
+
+  reemplazarTodos(cursos: Curso[]): void {
+  this.guardarEnStorage(cursos);
+}
 }

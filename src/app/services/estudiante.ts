@@ -110,4 +110,8 @@ export class EstudianteService {
     const lista = this.getEstudiantes().filter(e => e.id !== id);
     this.guardarEnStorage(lista);
   }
+
+  reemplazarTodos(estudiantes: Estudiante[]): void {
+  this.guardarEnStorage(estudiantes);
+}
 }

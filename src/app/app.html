@@ -1,4 +1,77 @@
+
 <app-header></app-header>
+
 <main class="main-container">
+  <div class="acciones-respaldo">
+    <button
+      type="button"
+      class="btn-exportar"
+      (click)="exportarJSON()">
+      Exportar JSON
+    </button>
+
+    <label for="archivo-json" class="btn-importar">
+      Importar JSON
+    </label>
+
+    <input
+      id="archivo-json"
+      type="file"
+      accept=".json,application/json"
+      (change)="seleccionarArchivo($event)"
+      hidden
+    >
+  </div>
+
+  @if (mensajeImportacion) {
+    <p class="mensaje-importacion">
+      {{ mensajeImportacion }}
+    </p>
+  }
+
+  @if (erroresImportacion.length > 0) {
+    <div class="errores-importacion">
+      <strong>Errores encontrados:</strong>
+
+      <ul>
+        @for (error of erroresImportacion; track $index) {
+          <li>{{ error }}</li>
+        }
+      </ul>
+    </div>
+  }
+
+  @if (resumenRespaldo) {
+    <div class="resumen-importacion">
+      <h3>Resumen del archivo JSON</h3>
+
+      <p>Estudiantes: {{ resumenRespaldo.estudiantes }}</p>
+      <p>Cursos: {{ resumenRespaldo.cursos }}</p>
+      <p>Inscripciones: {{ resumenRespaldo.inscripciones }}</p>
+
+      <p>
+        <strong>Atención:</strong>
+        La importación reemplazará los registros actuales.
+      </p>
+
+      <div class="botones-confirmacion">
+        <button
+          type="button"
+          class="btn-importar"
+          [disabled]="importando"
+          (click)="confirmarImportacion()">
+          Confirmar importación
+        </button>
+
+        <button
+          type="button"
+          class="btn-cancelar"
+          (click)="cancelarImportacion()">
+          Cancelar
+        </button>
+      </div>
+    </div>
+  }
+
   <router-outlet></router-outlet>
 </main>

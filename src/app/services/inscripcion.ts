@@ -132,4 +132,8 @@ export class InscripcionService {
 
     this.guardarEnStorage(lista);
   }
+
+  reemplazarTodos(inscripciones: Inscripcion[]): void {
+  this.guardarEnStorage(inscripciones);
+}
 }

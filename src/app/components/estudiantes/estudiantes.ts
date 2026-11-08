@@ -1,5 +1,6 @@
 
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import {
   FormBuilder,
@@ -33,7 +34,10 @@ function validarRangoEdad(minEdad: number, maxEdad: number): ValidatorFn {
     let edad = hoy.getFullYear() - fechaNacimiento.getFullYear();
     const mes = hoy.getMonth() - fechaNacimiento.getMonth();
 
-    if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNacimiento.getDate())) {
+    if (
+      mes < 0 ||
+      (mes === 0 && hoy.getDate() < fechaNacimiento.getDate())
+    ) {
       edad--;
     }
 
@@ -61,10 +65,11 @@ function validarRangoEdad(minEdad: number, maxEdad: number): ValidatorFn {
   templateUrl: './estudiantes.html',
   styleUrl: './estudiantes.css'
 })
-export class Estudiantes implements OnInit {
+export class Estudiantes implements OnInit, OnDestroy {
 
   private fb = inject(FormBuilder);
   private estudianteService = inject(EstudianteService);
+  private estudiantesSubscription?: Subscription;
 
   estudiantes: Estudiante[] = [];
   formEstudiante!: FormGroup;
@@ -89,25 +94,51 @@ export class Estudiantes implements OnInit {
 
   ngOnInit(): void {
     this.inicializarFormulario();
-    this.cargarEstudiantes();
+
+    this.estudiantesSubscription =
+      this.estudianteService.estudiantes$.subscribe(estudiantes => {
+        this.estudiantes = estudiantes;
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.estudiantesSubscription?.unsubscribe();
   }
 
   inicializarFormulario(): void {
     this.formEstudiante = this.fb.group({
-      carnet: ['', [Validators.required, Validators.pattern(/\S/)]],
-      primerNombre: ['', [Validators.required, Validators.pattern(/\S/)]],
+      carnet: ['', [
+        Validators.required,
+        Validators.pattern(/\S/)
+      ]],
+      primerNombre: ['', [
+        Validators.required,
+        Validators.pattern(/\S/)
+      ]],
       segundoNombre: [''],
-      primerApellido: ['', [Validators.required, Validators.pattern(/\S/)]],
+      primerApellido: ['', [
+        Validators.required,
+        Validators.pattern(/\S/)
+      ]],
       segundoApellido: [''],
-      correo: ['', [Validators.required, Validators.email]],
-      carrera: ['', [Validators.required, Validators.pattern(/\S/)]],
+      correo: ['', [
+        Validators.required,
+        Validators.email
+      ]],
+      carrera: ['', [
+        Validators.required,
+        Validators.pattern(/\S/)
+      ]],
       fechaNacimiento: ['', [
         Validators.required,
         validarRangoEdad(15, 100)
       ]],
       genero: ['', Validators.required],
       telefonos: this.fb.array([]),
-      direccion: ['', [Validators.required, Validators.pattern(/\S/)]],
+      direccion: ['', [
+        Validators.required,
+        Validators.pattern(/\S/)
+      ]],
       estatus: ['Activo', Validators.required]
     });
   }
@@ -155,10 +186,12 @@ export class Estudiantes implements OnInit {
 
     const datos = this.formEstudiante.value;
 
-    if (this.estudianteService.existeCarnet(
-      datos.carnet,
-      this.idEdicion || undefined
-    )) {
+    if (
+      this.estudianteService.existeCarnet(
+        datos.carnet,
+        this.idEdicion || undefined
+      )
+    ) {
       this.formEstudiante.get('carnet')?.setErrors({
         duplicado: true
       });
@@ -183,13 +216,16 @@ export class Estudiantes implements OnInit {
 
     try {
       if (this.modoEdicion && this.idEdicion !== null) {
-        this.estudianteService.actualizarEstudiante(estudiantePayload);
+        this.estudianteService.actualizarEstudiante(
+          estudiantePayload
+        );
       } else {
-        this.estudianteService.agregarEstudiante(estudiantePayload);
+        this.estudianteService.agregarEstudiante(
+          estudiantePayload
+        );
       }
 
       this.resetearFormulario();
-      this.cargarEstudiantes();
 
     } catch (error) {
       this.formEstudiante.get('carnet')?.setErrors({
@@ -235,8 +271,6 @@ export class Estudiantes implements OnInit {
       if (this.idEdicion === id) {
         this.resetearFormulario();
       }
-
-      this.cargarEstudiantes();
     }
   }
 
